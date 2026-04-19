@@ -58,7 +58,10 @@ const sanitizeHtml = (html) => {
   const bodyContent = tempDiv.querySelector('body');
   const content = bodyContent ? bodyContent.innerHTML : html;
 
-  return { content, styles };
+  // 限制内容宽度，防止表格等元素撑开容器
+  const wrappedContent = `<div style="max-width: 100%; overflow-x: auto; box-sizing: border-box;">${content}</div>`;
+
+  return { content: wrappedContent, styles };
 };
 
 /**

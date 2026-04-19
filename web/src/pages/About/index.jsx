@@ -27,6 +27,19 @@ import {
 } from '@douyinfe/semi-illustrations';
 import { useTranslation } from 'react-i18next';
 
+// 检测是否包含 HTML 内容
+const isHtmlContent = (content) => {
+  if (!content || typeof content !== 'string') return false;
+  const htmlTagRegex = /<\/?[a-z][\s\S]*>/i;
+  return htmlTagRegex.test(content);
+};
+
+// 限制 HTML 内容中的表格等元素宽度
+const wrapHtmlContent = (html) => {
+  if (!html) return '';
+  return `<div style="max-width: 100%; overflow-x: auto; box-sizing: border-box;">${html}</div>`;
+};
+
 const About = () => {
   const { t } = useTranslation();
   const [about, setAbout] = useState('');
@@ -38,8 +51,13 @@ const About = () => {
     const res = await API.get('/api/about');
     const { success, message, data } = res.data;
     if (success) {
+      // 如果是 HTML 内容限制宽度，否则直接使用
       let aboutContent = data;
-      if (!data.startsWith('https://')) {
+      if (data.startsWith('https://')) {
+        // URL 情况
+      } else if (isHtmlContent(data)) {
+        aboutContent = wrapHtmlContent(data);
+      } else {
         aboutContent = marked.parse(data);
       }
       setAbout(aboutContent);

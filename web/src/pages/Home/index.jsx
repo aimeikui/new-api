@@ -170,9 +170,9 @@ const Home = () => {
                     className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-semi-color-text-0 leading-tight ${isChinese ? 'tracking-wide md:tracking-wider' : ''}`}
                   >
                     <>
-                      {t('统一的')}
+                      {t('全球大模型')}
                       <br />
-                      <span className='shine-text'>{t('大模型接口网关')}</span>
+                      <span className='shine-text'>{t('接口聚合平台')}</span>
                     </>
                   </h1>
                   <p className='text-base md:text-lg lg:text-xl text-semi-color-text-1 mt-4 md:mt-6 max-w-xl'>
@@ -213,7 +213,7 @@ const Home = () => {
 
                 {/* 操作按钮 */}
                 <div className='flex flex-row gap-4 justify-center items-center'>
-                  <Link to='/console'>
+                  <Link to='/console/token'>
                     <Button
                       theme='solid'
                       type='primary'

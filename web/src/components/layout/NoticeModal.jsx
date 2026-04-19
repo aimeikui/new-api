@@ -36,6 +36,13 @@ import {
 import { StatusContext } from '../../context/Status';
 import { Bell, Megaphone } from 'lucide-react';
 
+// 检测是否包含 HTML 内容
+const isHtmlContent = (content) => {
+  if (!content || typeof content !== 'string') return false;
+  const htmlTagRegex = /<\/?[a-z][\s\S]*>/i;
+  return htmlTagRegex.test(content);
+};
+
 const NoticeModal = ({
   visible,
   onClose,
@@ -82,6 +89,12 @@ const NoticeModal = ({
     onClose();
   };
 
+  // 限制 HTML 内容中的表格等元素宽度
+  const wrapHtmlContent = (html) => {
+    if (!html) return '';
+    return `<div style="max-width: 100%; overflow-x: auto; box-sizing: border-box;">${html}</div>`;
+  };
+
   const displayNotice = async () => {
     setLoading(true);
     try {
@@ -89,8 +102,9 @@ const NoticeModal = ({
       const { success, message, data } = res.data;
       if (success) {
         if (data !== '') {
-          const htmlNotice = marked.parse(data);
-          setNoticeContent(htmlNotice);
+          // 如果是 HTML 内容直接使用，否则用 marked 解析 Markdown
+          const htmlNotice = isHtmlContent(data) ? data : marked.parse(data);
+          setNoticeContent(wrapHtmlContent(htmlNotice));
         } else {
           setNoticeContent('');
         }
